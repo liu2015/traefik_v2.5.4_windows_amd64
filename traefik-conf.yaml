@@ -1,0 +1,29 @@
+http:
+  routers:
+    to-whoami:
+      # rule: "Host(`k12345678s.top`) && PathPrefix(`/`)"
+      rule: "Host(`k12345678s.top`) && PathPrefix(`/`)"
+
+      middlewares:
+      - test-user
+      service: whoami
+
+  middlewares:
+    test-user:
+      headers:
+        accessControlAllowOriginList:
+          - :*
+        
+
+  #     basicAuth:
+  #       users:
+  #       - liu:$apr1$1r/b.LIT$8lNAPTWChn/1xz9Q8nTKQ.
+
+  services:
+    whoami:
+      loadBalancer:
+        servers:
+        
+        # - url : http://k12345678s.top:8080/dashboard/#/
+        - url: "http://10.128.63.28:30090/"
+          # - url: "http://www.baidu.com:30090"
