@@ -1,0 +1,17 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  # name: simpleingressroute
+  name: vuetest11
+  ## 命名空间要和所需要转发的 部署应用的命名空间一致
+  namespace: default
+spec:
+  entryPoints:
+    - webvue
+  routes:
+  - match: PathPrefix(`/`)
+    kind: Rule
+    services:
+    - name: vuetest1128-nodeport
+      port: 30090
+

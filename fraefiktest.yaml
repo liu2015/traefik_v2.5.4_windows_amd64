@@ -1,0 +1,17 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: vue-test11
+
+  ## 命名空间要和所需要转发的 部署应用的命名空间一致
+  namespace: default
+spec:
+  entryPoints:
+    # 指定入口点为web。这里的web就是traefik静态配置(启动参数)中的 --entryPoints.web.address=:8000,通过仪表盘也可以看到
+  - webvue
+  routes:
+  - kind: Rule
+    match: PathPrefix(`/`)
+    services:
+    - name: vuetest1128-nodeport
+      port: 30090

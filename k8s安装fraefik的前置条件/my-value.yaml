@@ -1,0 +1,102 @@
+deployment:
+  #部暑的副本数量
+  replicas: 1
+
+#let's encrypt配置
+#additionalArguments:
+# - "--certificatesresolvers.defalut.acme.storage=/data/acme.json"
+#  - --certificatesresolvers.default.acme.tlschallenge
+#  - --certificatesresolvers.default.acme.email=me@myself.com
+#  - --certificatesresolvers.default.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory
+
+#日志相关配置
+logs:
+  general:
+    level: ERROR
+  access:
+    enabled: true
+    format: json
+    bufferingSize: 100
+    filters: 
+      statuscodes: "200,300-302"
+      retryattempts: true
+      minduration: 10ms
+    fields:
+      general:
+        defaultmode: keep
+        names: 
+          ClientUsername: drop
+      headers:
+        defaultmode: drop
+        names: 
+          User-Agent: redact
+          Authorization: drop
+          Content-Type: keep
+
+#全局参数，开启dashboard,metrics等
+globalArguments:
+  - "--global.checknewversion"
+  - "--global.sendanonymoususage"
+  - "--serversTransport.insecureSkipVerify=true"
+  - "--api.insecure=true"
+  - "--api.dashboard=true"
+  - "--metrics.prometheus=true"
+  - "--metrics.prometheus.buckets=0.100000, 0.300000, 1.200000, 5.000000"
+  - "--metrics.prometheus.addEntryPointsLabels=true"
+  - "--metrics.prometheus.addServicesLabels=true"
+  - "--metrics.prometheus.entryPoint=metrics"
+  - "--metrics.prometheus.manualrouting=true"
+  #- "--entryPoints.metrics.address=:8020"
+  #- "--metrics.prometheus.manualrouting=true"
+  # zinkin tracing 配置
+  - "--tracing.zipkin=true"
+  - "--tracing.zipkin.httpEndpoint=http://localhost:9411/api/v2/spans"
+  - "--tracing.zipkin.sameSpan=true"
+  - "--tracing.zipkin.id128Bit=false"
+  - "--tracing.zipkin.sampleRate=0.2"
+#端口暴露配置
+ports:
+  traefik:
+    port: 9000
+    # hostPort: 9000
+    # hostIP: 192.168.100.10
+    expose: true
+    exposedPort: 9000
+    protocol: TCP
+    nodePort: 30900
+  web:
+    port: 8000
+    # hostPort: 8000
+    expose: true
+    exposedPort: 80
+    protocol: TCP
+    nodePort: 30800
+    # redirectTo: websecure
+  websecure:
+    port: 8443
+    # hostPort: 8443
+    expose: true
+    exposedPort: 443
+    protocol: TCP
+    nodePort: 30443
+  #设置tcp代理  
+  mongo:
+    port: 27017
+    expose: true
+    exposedPort: 27017
+    protocol: TCP
+    #hostPort: 27017
+    nodePort: 30277
+#资源限制
+resources:
+  requests:
+    cpu: "100m"
+    memory: "50Mi"
+  limits:
+    cpu: "300m"
+    memory: "150Mi"
+
+#端口暴露方式
+service:
+  #type: LoadBalancer
+  type: NodePort

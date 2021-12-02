@@ -22,3 +22,28 @@ http:
         # - url : http://k12345678s.top:8080/dashboard/#/
         - url: "http://10.128.63.28:30090/"
           # - url: "http://www.baidu.com:30090"
+            
+
+
+
+    # to-whoami1:
+    #   rule: "PathPrefix(`/logistics`)"
+    #   servers: testservice
+
+
+      # middlewares:
+      # - test-user
+      # service: whoami
+
+
+  #     basicAuth:
+  #       users:
+  #       - liu:$apr1$1r/b.LIT$8lNAPTWChn/1xz9Q8nTKQ.
+
+  # services:
+  #   testservice:
+  #     loadBalancer:
+  #       servers:
+  #       # - url: http://hw485.andrewlu.cn/logistics/
+  #         -url: "http://hw485.andrewlu.cn/logistics/"
+    
